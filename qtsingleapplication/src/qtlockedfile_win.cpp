@@ -52,6 +52,11 @@
 // Maximum number of concurrent read locks. Must not be greater than MAXIMUM_WAIT_OBJECTS
 #define MAX_READERS MAXIMUM_WAIT_OBJECTS
 
+static const wchar_t* QS2WSTR(const QString& s)
+{
+    return reinterpret_cast<const wchar_t*>(s.utf16());
+}
+
 Qt::HANDLE QtLockedFile::getMutexHandle(int idx, bool doCreate)
 {
     if (mutexname.isEmpty()) {
@@ -65,7 +70,7 @@ Qt::HANDLE QtLockedFile::getMutexHandle(int idx, bool doCreate)
 
     Qt::HANDLE mutex;
     if (doCreate) {
-        QT_WA( { mutex = CreateMutexW(NULL, FALSE, (TCHAR*)mname.utf16()); },
+        QT_WA( { mutex = CreateMutexW(NULL, FALSE, QS2WSTR(mname) ); },
                { mutex = CreateMutexA(NULL, FALSE, mname.toLocal8Bit().constData()); } );
         if (!mutex) {
             qErrnoWarning("QtLockedFile::lock(): CreateMutex failed");
@@ -73,7 +78,7 @@ Qt::HANDLE QtLockedFile::getMutexHandle(int idx, bool doCreate)
         }
     }
     else {
-        QT_WA( { mutex = OpenMutexW(SYNCHRONIZE | MUTEX_MODIFY_STATE, FALSE, (TCHAR*)mname.utf16()); },
+        QT_WA( { mutex = OpenMutexW(SYNCHRONIZE | MUTEX_MODIFY_STATE, FALSE, QS2WSTR(mname) ); },
                { mutex = OpenMutexA(SYNCHRONIZE | MUTEX_MODIFY_STATE, FALSE, mname.toLocal8Bit().constData()); } );
         if (!mutex) {
             if (GetLastError() != ERROR_FILE_NOT_FOUND)

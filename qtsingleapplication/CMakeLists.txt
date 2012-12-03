@@ -1,25 +1,44 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.4)
+
 PROJECT(QtSingleApplication)
 
-QT4_WRAP_CPP(QtSingleApplication_mocs src/qtlocalpeer.h src/qtsingleapplication.h src/qtsinglecoreapplication.h)
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtNetwork QtGui REQUIRED)
+
+INCLUDE(${QT_USE_FILE})
+
+
+SET(HEADERS
+	src/qtlocalpeer.h
+	src/qtsingleapplication.h
+	src/qtsinglecoreapplication.h
+)
+
+SET(SOURCES
+	src/qtlocalpeer.cpp
+	src/qtsingleapplication.cpp
+	src/qtsinglecoreapplication.cpp
+)
+
+QT4_WRAP_CPP(QtSingleApplication_mocs ${HEADERS})
+
 
 IF(USE_SHARED_OBJECTS)
 	ADD_LIBRARY(QtSolutions_SingleApplication SHARED
-	        src/qtlocalpeer.cpp
-	        src/qtsingleapplication.cpp
-	        src/qtsinglecoreapplication.cpp
+	       	${SOURCES}
+	       	${HEADERS}
 	        ${QtSingleApplication_mocs}
 	)
 ELSE(USE_SHARED_OBJECTS)
 	ADD_LIBRARY(QtSolutions_SingleApplication STATIC
-	        src/qtlocalpeer.cpp
-	        src/qtsingleapplication.cpp
-	        src/qtsinglecoreapplication.cpp
+	        ${SOURCES}
 	        ${QtSingleApplication_mocs}
 	)
 ENDIF(USE_SHARED_OBJECTS)
 
-SET_TARGET_PROPERTIES(QtSolutions_SingleApplication PROPERTIES
-	COMPILE_DEFINITIONS QT_QTSINGLEAPPLICATION_EXPORT)
+ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_EXPORT)
+
+#SET_TARGET_PROPERTIES(QtSolutions_SingleApplication PROPERTIES
+#	COMPILE_DEFINITIONS QT_QTSINGLEAPPLICATION_EXPORT)
 
 TARGET_LINK_LIBRARIES(QtSolutions_SingleApplication
 	${QT_LIBRARIES}
