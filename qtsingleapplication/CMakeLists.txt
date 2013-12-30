@@ -1,11 +1,23 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.4)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 
 PROJECT(QtSingleApplication)
 
-FIND_PACKAGE(Qt4 COMPONENTS QtCore QtNetwork QtGui REQUIRED)
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtNetwork QtGui QUIET)
+IF(QT4_FOUND)
+	INCLUDE(${QT_USE_FILE})
+ELSE()
+	FIND_PACKAGE(Qt5 COMPONENTS Core Network Widgets REQUIRED)
+ENDIF()
 
-INCLUDE(${QT_USE_FILE})
+IF(NOT QT4_FOUND AND NOT Qt5_FOUND)
+	MESSAGE("*********   No Qt version found, stopping!!!   *********")
+	RETURN()
+ELSE()
+	MESSAGE("Found Qt version ${QTVERSION}")
+ENDIF()
 
+SET(CMAKE_AUTOMOC ON)
+SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 SET(HEADERS
 	src/qtlocalpeer.h
@@ -19,30 +31,20 @@ SET(SOURCES
 	src/qtsinglecoreapplication.cpp
 )
 
-QT4_WRAP_CPP(QtSingleApplication_mocs ${HEADERS})
-
-
-IF(USE_SHARED_OBJECTS)
-	ADD_LIBRARY(QtSolutions_SingleApplication SHARED
-	       	${SOURCES}
-	       	${HEADERS}
-	        ${QtSingleApplication_mocs}
-	)
-ELSE(USE_SHARED_OBJECTS)
-	ADD_LIBRARY(QtSolutions_SingleApplication STATIC
-	        ${SOURCES}
-	        ${QtSingleApplication_mocs}
-	)
-ENDIF(USE_SHARED_OBJECTS)
+ADD_LIBRARY(QtSolutions_SingleApplication SHARED
+	${SOURCES}
+	${HEADERS}
+)
 
 ADD_DEFINITIONS(-DQT_QTSINGLEAPPLICATION_EXPORT)
 
-#SET_TARGET_PROPERTIES(QtSolutions_SingleApplication PROPERTIES
-#	COMPILE_DEFINITIONS QT_QTSINGLEAPPLICATION_EXPORT)
-
-TARGET_LINK_LIBRARIES(QtSolutions_SingleApplication
-	${QT_LIBRARIES}
-)
+IF(QT4_FOUND)
+	TARGET_LINK_LIBRARIES(QtSolutions_SingleApplication
+		${QT_LIBRARIES}
+	)
+ELSE()
+	QT5_USE_MODULES(QtSolutions_SingleApplication Core Network Widgets)
+ENDIF()
 
 IF(STANDALONE_EXTERN_BUILD)
 
@@ -54,21 +56,17 @@ IF(STANDALONE_EXTERN_BUILD)
 
 ELSE(STANDALONE_EXTERN_BUILD)
 
-	IF(USE_SHARED_OBJECTS)
-
-		IF(UNIX AND NOT APPLE)
-			INSTALL(TARGETS QtSolutions_SingleApplication
-				RUNTIME DESTINATION /usr/local/movial/lib
-				LIBRARY DESTINATION /usr/local/movial/lib
-				)
-		ELSE(UNIX AND NOT APPLE)
-			INSTALL(TARGETS QtSolutions_SingleApplication
-				RUNTIME DESTINATION .
-				LIBRARY DESTINATION .
-				)
-		ENDIF(UNIX AND NOT APPLE)
-
-	ENDIF(USE_SHARED_OBJECTS)
+	IF(UNIX AND NOT APPLE)
+		INSTALL(TARGETS QtSolutions_SingleApplication
+			RUNTIME DESTINATION /usr/local/movial/lib
+			LIBRARY DESTINATION /usr/local/movial/lib
+			)
+	ELSE(UNIX AND NOT APPLE)
+		INSTALL(TARGETS QtSolutions_SingleApplication
+			RUNTIME DESTINATION .
+			LIBRARY DESTINATION .
+			)
+	ENDIF(UNIX AND NOT APPLE)
 
 ENDIF(STANDALONE_EXTERN_BUILD)
 
