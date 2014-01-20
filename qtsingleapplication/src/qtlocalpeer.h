@@ -69,6 +69,11 @@ Q_SIGNALS:
 
 protected Q_SLOTS:
     void receiveConnection();
+	void onReadyRead();
+
+private:
+	bool socketReady(QLocalSocket* socket) const;
+	void readSocket(QLocalSocket* socket);
 
 protected:
     QString id;
