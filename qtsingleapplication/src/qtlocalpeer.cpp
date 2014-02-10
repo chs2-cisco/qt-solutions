@@ -168,15 +168,36 @@ bool QtLocalPeer::sendMessage(const QString &message, int timeout)
     return res;
 }
 
+bool QtLocalPeer::socketReady(QLocalSocket* socket) const
+{
+	return socket && socket->bytesAvailable() >= (int)sizeof(quint32);
+}
 
 void QtLocalPeer::receiveConnection()
 {
-    QLocalSocket* socket = server->nextPendingConnection();
-    if (!socket)
-        return;
+    while (QLocalSocket* socket = server->nextPendingConnection())
+	{
+		if (socketReady(socket))
+		{
+			readSocket(socket);
+		}
+		else
+		{
+			connect(socket, SIGNAL(readyRead()), SLOT(onReadyRead()));
+			connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
+		}
+	}
+}
 
-    while (socket->bytesAvailable() < (int)sizeof(quint32))
-        socket->waitForReadyRead();
+void QtLocalPeer::onReadyRead()
+{
+	QLocalSocket* socket = qobject_cast<QLocalSocket*>(sender());
+	if (socketReady(socket))
+		readSocket(socket);
+}
+
+void QtLocalPeer::readSocket(QLocalSocket* socket)
+{
     QDataStream ds(socket);
     QByteArray uMsg;
     quint32 remaining;
@@ -189,15 +210,18 @@ void QtLocalPeer::receiveConnection()
         remaining -= got;
         uMsgBuf += got;
     } while (remaining && got >= 0 && socket->waitForReadyRead(2000));
+
     if (got < 0) {
-        qWarning("QtLocalPeer: Message reception failed %s", socket->errorString().toLatin1().constData());
-        delete socket;
+        qWarning() << "QtLocalPeer: Message reception failed" << socket->errorString();
+        socket->deleteLater();
         return;
     }
+
     QString message(QString::fromUtf8(uMsg));
     socket->write(ack, qstrlen(ack));
     socket->waitForBytesWritten(1000);
-    socket->waitForDisconnected(1000); // make sure client reads ack
-    delete socket;
+	socket->disconnect(this);
+    socket->deleteLater();
+
     emit messageReceived(message); //### (might take a long time to return)
 }
