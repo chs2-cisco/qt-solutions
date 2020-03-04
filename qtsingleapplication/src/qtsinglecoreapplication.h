@@ -38,6 +38,21 @@
 **
 ****************************************************************************/
 
+/*
+ * BTUC-1891: Export QtSingleCoreApplication
+ * Jan 10, 2014, Juho Frits (Cisco Systems, Inc.)
+ */
+/*
+ * BTUC-1392: Upgrade qtsingleapplication sources
+ * Dec 27, 2013, Juho Frits (Cisco Systems, Inc.)
+ */
+/*
+ * BTUC-742: changed BtbcCrashService to use QtSingleCoreApplication
+ * so we can ensure one running instance. Updated CrashReporter source
+ * accordingly.
+ * Dec 3, 2012, Teemu Patja (Cisco Systems, Inc.)
+ */
+
 #ifndef QTSINGLECOREAPPLICATION_H
 #define QTSINGLECOREAPPLICATION_H
 

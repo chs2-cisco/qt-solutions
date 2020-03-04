@@ -38,6 +38,11 @@
 **
 ****************************************************************************/
 
+/*
+ * BTUC-1392: Upgrade qtsingleapplication sources
+ * Dec 27, 2013, Juho Frits (Cisco Systems, Inc.)
+ */
+
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>

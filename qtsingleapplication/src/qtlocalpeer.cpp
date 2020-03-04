@@ -38,6 +38,23 @@
 **
 ****************************************************************************/
 
+/*
+ * BTUC-11223 Add include to make it compile
+ * Apr 14, 2016, Jani Tykkä (Cisco Systems, Inc.)
+ */
+/*
+ * Merge branch 'R20.0.1' into 20.1
+ * Feb 10, 2014, Jani Tykkä (Cisco Systems, Inc.)
+ */
+/*
+ * BTUC-3899: handle incoming messages asynchronously for
+ * the app not to loop forever in case of no data in socket
+ * Jan 20, 2014, Jussi Muhonen (Cisco Systems, Inc.)
+ */
+/*
+ * BTUC-1392: Upgrade qtsingleapplication sources
+ * Dec 27, 2013, Juho Frits (Cisco Systems, Inc.)
+ */
 
 #include "qtlocalpeer.h"
 #include <QCoreApplication>

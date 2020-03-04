@@ -38,6 +38,10 @@
 **
 ****************************************************************************/
 
+/*
+ * BTUC-1392: Upgrade qtsingleapplication sources
+ * Dec 27, 2013, Juho Frits (Cisco Systems, Inc.)
+ */
 
 #include "qtsinglecoreapplication.h"
 #include "qtlocalpeer.h"

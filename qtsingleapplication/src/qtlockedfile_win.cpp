@@ -38,6 +38,17 @@
 **
 ****************************************************************************/
 
+/*
+ * BTUC-1392: Upgrade qtsingleapplication sources
+ * Dec 27, 2013, Juho Frits (Cisco Systems, Inc.)
+ */
+/*
+ * BTUC-742: changed BtbcCrashService to use QtSingleCoreApplication
+ * so we can ensure one running instance. Updated CrashReporter source
+ * accordingly.
+ * Dec 3, 2012, Teemu Patja (Cisco Systems, Inc.)
+ */
+
 #include "qtlockedfile.h"
 #include <qt_windows.h>
 #include <QFileInfo>

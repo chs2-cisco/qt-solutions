@@ -1,3 +1,35 @@
+# fix lib-dir for osx
+# Jan 13, 2017, Jukka Lehtniemi (Cisco Systems, Inc.)
+
+# CMake changes to build standalone
+# Oct 14, 2016, Jukka Lehtniemi (Cisco Systems, Inc.)
+
+# BTUC-8049: Remove support for building against Qt 4
+# Mar 31, 2015, Juho Frits (Cisco Systems, Inc.)
+
+# BTUC-1392: Use CMake policy CMP0020 only if it exists
+# Jan 15, 2014, Juho Frits (Cisco Systems, Inc.)
+
+# BTUC-1392: Set CMake policy regarding Qt::WinMain
+# Setting the CMake policy prevents CMake 2.8.12 from
+# complaining about the changed policy regarding linking
+# against Qt::WinMain.
+# Jan 14, 2014, Juho Frits (Cisco Systems, Inc.)
+
+# BTUC-1392: Qt 5 build fixes for Windows
+# Jan 3, 2014, Juho Frits (Cisco Systems, Inc.)
+
+# BTUC-1392: Fixes for linking against externs built with Qt 5
+# Dec 31, 2013, Juho Frits (Cisco Systems, Inc.)
+
+# BTUC-1392: CMake fixes for building QtSingleApplication with Qt 5
+# Dec 30, 2013, Juho Frits (Cisco Systems, Inc.)
+
+# BTUC-742: changed BtbcCrashService to use QtSingleCoreApplication
+# so we can ensure one running instance. Updated CrashReporter source
+# accordingly.
+# Dec 3, 2012, Teemu Patja (Cisco Systems, Inc.)
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
 IF(POLICY CMP0020)
 	CMAKE_POLICY(SET CMP0020 OLD)
